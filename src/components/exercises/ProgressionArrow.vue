@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex items-center justify-center"
-    :style="`font-size: 2em; background-color: ${arrow.color}; width: 30px; height: 30px; border-radius: 100%; rotate: ${arrow.deg}deg; over`"
+    :style="`font-size: 2em; background-color: ${arrow.color}; width: 25px; height: 25px; border-radius: 100%; rotate: ${arrow.deg}deg; over`"
   >
     <POIcon
       v-if="progression.amount > 0"
