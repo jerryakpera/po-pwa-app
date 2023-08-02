@@ -73,7 +73,7 @@
             </q-item-label>
             <ProgressionArrow
               class="q-mt-xs"
-              :progression="workout.progression"
+              :stats="workout.stats"
               :progressive_overload="workout.progressive_overload"
             />
           </q-item-section>

@@ -1,17 +1,33 @@
 <template>
   <div
     class="flex items-center justify-center"
-    :style="`font-size: 2em; background-color: ${arrow.color}; width: 25px; height: 25px; border-radius: 100%; rotate: ${arrow.deg}deg; over`"
+    :style="`font-size: 2em; background-color: ${arrow?.color}; width: 30px; height: 30px; border-radius: 5px;`"
   >
     <POIcon
-      v-if="progression.amount > 0"
-      icon="ic:outline-keyboard-double-arrow-up"
+      icon="ic:baseline-keyboard-double-arrow-up"
+      :style="`rotate: ${arrow?.rotation}deg;`"
+      style="transform-origin: center"
     />
-    <POIcon v-else icon="ic:outline-keyboard-double-arrow-down" />
 
-    <q-tooltip>
-      <div>Progressive Overload: {{ progressive_overload }}</div>
-      <div>Percent Change: {{ Math.floor(progression.percent) }}%</div>
+    <q-tooltip :style="`background-color: ${arrow.color}`">
+      <div class="flex items-center nowrap flex-nowrap">
+        <POIcon
+          style="font-size: 1.3em"
+          :icon="
+            props.stats.percentageDifferenceWithLastPO < 0
+              ? 'game-icons:muscle-fat'
+              : 'game-icons:muscle-up'
+          "
+          class="q-mr-xs"
+        />
+        Your workout
+        {{
+          props.stats.percentageDifferenceWithLastPO < 0
+            ? "reduced"
+            : "increased"
+        }}
+        by {{ props.stats.percentageDifferenceWithLastPO }}%
+      </div>
     </q-tooltip>
   </div>
 </template>
@@ -19,39 +35,47 @@
 <script setup>
 import { computed } from "vue";
 
-const props = defineProps(["progressive_overload", "progression"]);
+const props = defineProps(["stats", "progressive_overload"]);
 
-const getArrowColor = ({ percent, amount }) => {
-  if (amount < 0) {
-    if (Math.abs(percent) > 75) return "#990000";
-    if (Math.abs(percent) > 50) return "#CC3333";
-    if (Math.abs(percent) > 25) return "#FF6666";
-    if (Math.abs(percent) > 0) return "#FF9999";
-  }
+const getColors = (amount, percent) => {
+  const percentNumber = Number(percent);
 
-  if (amount > 0) {
-    if (Math.abs(percent) > 75) return "#007200";
-    if (Math.abs(percent) > 50) return "#008000";
-    if (Math.abs(percent) > 25) return "#38b000";
-    if (Math.abs(percent) > 0) return "#70e000";
-  }
+  if (percentNumber < -75) return "#390E0A";
+  if (percentNumber < -50) return "#C11101";
+  if (percentNumber < -25) return "#FE3A29";
+  if (percentNumber < -0) return "#FE998F";
 
-  return "green";
+  if (percentNumber > 75) return "#297057";
+  if (percentNumber > 50) return "#33906F";
+  if (percentNumber > 25) return "#3DB088";
+  if (percentNumber > 0) return "#54C59D";
 };
 
-const getArrowRotation = ({ percent, amount }) => {
-  const absolutePercent = Math.abs(percent);
-  return 90 - Math.floor((absolutePercent / 100) * 90);
+const getRotation = (percent) => {
+  const deg = (Number(percent) / 100) * 90;
+  if (deg > 90) return 0;
+  return 90 - deg;
 };
 
 const arrow = computed(() => {
-  const { amount, percent } = props.progression;
+  console.log(props.progressive_overload);
+  const {
+    differenceWithLastPO: amount,
+    percentageDifferenceWithLastPO: percent,
+  } = props.stats;
 
   return {
-    color: getArrowColor({ amount, percent }),
-    deg: getArrowRotation({ amount, percent }),
+    color: getColors(amount, percent),
+    rotation: getRotation(percent),
   };
 });
+
+// const exampleStats = {
+//   differenceWithLastPO: 1440,
+//   differenceWithAveragePO: 1440,
+//   percentageDifferenceWithLastPO: "100",
+//   percentageDifferenceWithAveragePO: "100",
+// };
 </script>
 
 <style lang="scss" scoped></style>

@@ -22,13 +22,7 @@
     </q-input>
 
     <div class="q-mt-md" v-for="exercise in exercises" :key="exercise._id">
-      <ExerciseCard :exercise="exercise">
-        <template #progression v-if="exercise?.workouts.length">
-          <Progression
-            :workouts="[...exercise.workouts, ...exercise.workouts].slice(-7)"
-          />
-        </template>
-      </ExerciseCard>
+      <ExerciseCard :exercise="exercise" />
     </div>
   </div>
 </template>

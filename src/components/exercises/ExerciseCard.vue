@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <slot name="progression" />
+    <slot name="stats" />
   </q-card>
 </template>
 

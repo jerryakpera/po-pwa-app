@@ -33,9 +33,10 @@
         :key="exercise._id"
         :exercise="exercise"
       >
-        <template #progression>
+        <template #stats>
           <Progression
-            :workouts="[...exercise.workouts, ...exercise.workouts].slice(-7)"
+            :workouts="[...exercise.workouts].slice(-7)"
+            :totalProgressiveOverload="exercise?.totalProgressiveOverload"
           />
         </template>
       </ExerciseCard>

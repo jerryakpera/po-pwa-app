@@ -14,7 +14,6 @@
         dark
         rounded
         outlined
-        autofocus
         type="text"
         color="info"
         label="email"

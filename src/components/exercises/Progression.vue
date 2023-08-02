@@ -1,10 +1,10 @@
 <template>
   <div class="q-pa-sm">
-    <div class="progressions">
+    <div class="stats">
       <div v-for="workout in workouts" :key="workout._id">
         <ProgressionArrow
+          :stats="workout.stats"
           :progressive_overload="workout.progressive_overload"
-          :progression="workout.progression"
         />
       </div>
     </div>
@@ -14,15 +14,14 @@
 <script setup>
 import ProgressionArrow from "./ProgressionArrow.vue";
 
-const props = defineProps(["workouts"]);
+const props = defineProps(["workouts", "totalProgressiveOverload"]);
 </script>
 
 <style lang="scss" scoped>
-.progressions {
-  gap: 10px;
+.stats {
+  gap: 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   overflow-x: hidden;
   overflow-y: hidden;
 }
