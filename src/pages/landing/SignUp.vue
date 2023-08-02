@@ -158,10 +158,10 @@ const maxUsernameLength = isLength.max(32);
 const revealPassword = ref(false);
 const revealConfirmPassword = ref(false);
 const user = ref({
-  email: "jeremiahtersooakpera@gmail.com",
-  username: "jerryakpera",
-  password: "Pass@word1",
-  confirmpassword: "Pass@word1",
+  email: "",
+  username: "",
+  password: "",
+  confirmpassword: "",
 });
 
 const passwordMatches = computed(() => (val) => {
