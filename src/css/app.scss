@@ -1,0 +1,15 @@
+// app global css in SCSS form
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Urbanist:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+.font1 {
+  font-family: "Comfortaa", cursive;
+}
+
+.font2 {
+  font-family: "Urbanist", sans-serif;
+}
+
+.link {
+  text-decoration: none;
+  color: #f39f5a;
+}
