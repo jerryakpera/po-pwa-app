@@ -10,6 +10,7 @@
     :columns="columns"
     :loading="loading"
     selection="multiple"
+    :filter-method="filterFn"
     :rows-per-page-options="[10]"
     :pagination="{ rowsPerPage: 10 }"
   >
@@ -18,7 +19,7 @@
         dense
         outlined
         clearable
-        debounce="300"
+        debounce="800"
         v-model="filter"
         class="full-width"
         placeholder="Search exercises by name or body part"
@@ -45,6 +46,28 @@ const props = defineProps(["exercises"]);
 
 const filter = ref("");
 const loading = ref(false);
+
+const filterFn = (rows, terms) => {
+  const pins = terms?.toLowerCase().trim().split(" ");
+  const trimmedPins = pins.map((pin) => pin.trim());
+
+  return rows.filter((exercise) => {
+    const { name, target, bodyPart, equipment } = exercise;
+    const hayStack = `${name.toLowerCase()} ${target.toLowerCase()} ${bodyPart.toLowerCase()} ${equipment.toLowerCase()}`;
+
+    let index = -1;
+    for (let i = 0; i < trimmedPins.length; i++) {
+      const pin = trimmedPins[i];
+
+      if (hayStack.includes(pin)) {
+        index = 0;
+        break;
+      }
+    }
+
+    if (index === 0) return exercise;
+  });
+};
 
 const columns = [
   { name: "name", field: "name" },
