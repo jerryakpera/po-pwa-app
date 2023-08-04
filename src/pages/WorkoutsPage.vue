@@ -113,10 +113,12 @@ import { ref, onMounted, computed, watch } from "vue";
 
 import ProgressionArrow from "src/components/exercises/ProgressionArrow.vue";
 
-import { loadExercise } from "src/utils";
+import { loadUsersExercise } from "src/utils";
+import { useAuthStore } from "stores/auth-store";
 
 const $q = useQuasar();
 const router = useRouter();
+const authStore = useAuthStore();
 const props = defineProps(["exerciseId"]);
 
 const calendar = ref(null);
@@ -230,7 +232,7 @@ const fetchWorkout = async (id) => {
   $q.loading.show();
 
   try {
-    exercise.value = await loadExercise(id);
+    exercise.value = await loadUsersExercise(id, authStore.authUser.uid);
     initializeCalendar(exercise.value?.workouts);
   } catch (e) {
     console.log(e);

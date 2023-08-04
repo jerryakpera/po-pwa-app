@@ -2,7 +2,18 @@ import { api } from "src/boot/axios";
 
 export const loadExercise = async (exerciseId) => {
   try {
-    const { data } = await api.get(`/exercises/${exerciseId}`);
+    const { data } = await api.get(`/exercises/${exerciseId}/`);
+    const { exercise } = data;
+
+    return exercise;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const loadUsersExercise = async (exerciseId, uid) => {
+  try {
+    const { data } = await api.get(`/exercises/${exerciseId}/${uid}`);
     const { exercise } = data;
 
     return exercise;
