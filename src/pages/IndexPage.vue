@@ -27,7 +27,31 @@
       record your first workout
     </div>
 
-    <div class="q-mt-md">
+    <q-btn-toggle
+      spread
+      no-caps
+      disable
+      size="sm"
+      color="white"
+      class="q-my-sm"
+      text-color="black"
+      toggle-color="blue-5"
+      v-model="workoutStore.comparison"
+      :options="[
+        { label: 'vs last workout', value: 'last' },
+        { label: 'vs average workout', value: 'average' },
+      ]"
+    >
+      <q-tooltip class="text-body2">
+        {{
+          workoutStore.comparison === "last"
+            ? "Will display your progression in comparison with your last workout for that exercise"
+            : "Will display your progression in comparison with your average workout for that exercise"
+        }}
+      </q-tooltip>
+    </q-btn-toggle>
+
+    <div class="q-mt-sm">
       <ExerciseCard
         v-for="exercise in exercises"
         :key="exercise._id"

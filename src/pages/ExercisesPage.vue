@@ -1,53 +1,29 @@
 <template>
   <div>
-    <q-input
-      dense
-      rounded
-      outlined
-      bottom-slots
-      color="accent"
-      v-model="search"
-      placeholder="search"
-      hint="Search your workouts"
-    >
-      <template v-slot:append>
-        <q-icon
-          name="close"
-          v-if="search !== ''"
-          @click="search = ''"
-          class="cursor-pointer"
-        />
-        <q-icon name="search" />
-      </template>
-    </q-input>
-
-    <div class="q-mt-md" v-for="exercise in exercises" :key="exercise._id">
-      <ExerciseCard :exercise="exercise" />
-    </div>
+    <ExercisesTable :exercises="exercises" />
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useQuasar, debounce } from "quasar";
 
-import { loadExercises } from "src/utils";
+import { loadAllExercises } from "src/utils";
 import { useExerciseStore } from "stores/exercise-store";
-import { ExerciseCard, Progression } from "src/components";
+import { ExerciseCard, ExercisesTable } from "src/components";
 
 const $q = useQuasar();
 const exerciseStore = useExerciseStore();
 
 const search = ref("");
-const exercises = ref([]);
+const exercises = computed(() => exerciseStore.exercises);
 
 const fetchExercises = async (q) => {
   $q.loading.show();
 
   try {
-    const data = await loadExercises(q);
+    const data = await loadAllExercises(q);
     exerciseStore.exercises = [...data];
-    exercises.value = [...data];
   } catch (e) {
     console.log(e);
   }
@@ -55,16 +31,17 @@ const fetchExercises = async (q) => {
   $q.loading.hide();
 };
 
-const filterExercises = async (q) => {
-  const pin = q.toLowerCase().trim();
-  await fetchExercises(pin);
-};
+// const filterExercises = async (q) => {
+//   const pin = q.toLowerCase().trim();
+//   await fetchExercises(pin);
+// };
 
-const debouncedFilter = debounce(filterExercises, 800);
+// const debouncedFilter = debounce(filterExercises, 800);
 
-watch(search, debouncedFilter);
+// watch(search, debouncedFilter);
 
 onMounted(async () => {
+  if (exerciseStore.exercises.length > 0) return;
   await fetchExercises("");
 });
 </script>

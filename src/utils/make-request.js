@@ -39,6 +39,23 @@ export const loadExercises = async (q) => {
   }
 };
 
+export const loadAllExercises = async (q) => {
+  try {
+    const queryParams = new URLSearchParams({
+      q,
+    });
+
+    const url = q ? `/exercises/all?${queryParams}` : "/exercises/all";
+
+    const { data } = await api.get(url);
+    const { exercises } = data;
+
+    return exercises;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const loadWorkoutExercises = async (uid) => {
   try {
     const { data } = await api.get(`/exercises/workouts/${uid}`);
