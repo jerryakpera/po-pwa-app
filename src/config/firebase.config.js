@@ -15,7 +15,6 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 
 export const getCurrentUser = () => {
-  console.log("Running");
   return new Promise((resolve, reject) => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       unsubscribe();

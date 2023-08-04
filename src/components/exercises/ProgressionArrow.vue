@@ -34,8 +34,11 @@
 
 <script setup>
 import { computed } from "vue";
+import { useWorkoutStore } from "stores/workout-store";
 
 const props = defineProps(["stats", "progressive_overload"]);
+
+const workoutStore = useWorkoutStore();
 
 const getColors = (amount, percent) => {
   const percentNumber = Number(percent);
@@ -58,11 +61,15 @@ const getRotation = (percent) => {
 };
 
 const arrow = computed(() => {
-  console.log(props.progressive_overload);
-  const {
+  let {
     differenceWithLastPO: amount,
     percentageDifferenceWithLastPO: percent,
   } = props.stats;
+
+  if (workoutStore.comparison !== "last") {
+    amount = props.stats.differenceWithAveragePO;
+    percent = props.stats.percentageDifferenceWithAveragePO;
+  }
 
   return {
     color: getColors(amount, percent),
