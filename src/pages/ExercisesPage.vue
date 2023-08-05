@@ -5,17 +5,16 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
-import { useQuasar, debounce } from "quasar";
+import { useQuasar } from "quasar";
+import { computed, onMounted } from "vue";
 
 import { loadAllExercises } from "src/utils";
+import { ExercisesTable } from "src/components";
 import { useExerciseStore } from "stores/exercise-store";
-import { ExerciseCard, ExercisesTable } from "src/components";
 
 const $q = useQuasar();
 const exerciseStore = useExerciseStore();
 
-const search = ref("");
 const exercises = computed(() => exerciseStore.exercises);
 
 const fetchExercises = async (q) => {
@@ -23,22 +22,15 @@ const fetchExercises = async (q) => {
 
   try {
     const data = await loadAllExercises(q);
-    exerciseStore.exercises = [...data];
+    exerciseStore.exercises = [...data].filter(
+      (exercise) => exercise.target != "cardiovascular system"
+    );
   } catch (e) {
     console.log(e);
   }
 
   $q.loading.hide();
 };
-
-// const filterExercises = async (q) => {
-//   const pin = q.toLowerCase().trim();
-//   await fetchExercises(pin);
-// };
-
-// const debouncedFilter = debounce(filterExercises, 800);
-
-// watch(search, debouncedFilter);
 
 onMounted(async () => {
   if (exerciseStore.exercises.length > 0) return;

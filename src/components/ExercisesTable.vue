@@ -33,6 +33,7 @@
               class="full-width"
               :options="bodyParts"
               v-model="bodyPartsFilter"
+              popup-content-style="height: 300px"
             >
               <template #prepend>
                 <POIcon icon="ic:baseline-filter-alt" />
@@ -49,6 +50,7 @@
               class="full-width"
               :options="equipments"
               v-model="equipmentsFilter"
+              popup-content-style="height: 300px"
             >
               <template #prepend>
                 <POIcon icon="ic:baseline-filter-alt" />
@@ -159,7 +161,6 @@ const bodyParts = [
   "hamstrings",
   "adductors",
   "triceps",
-  "cardiovascular system",
   "spine",
   "upper back",
   "biceps",
