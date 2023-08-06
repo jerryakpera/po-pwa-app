@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :key="componentKey">
     <div class="flex items-center q-gutter-md">
       <q-img
         v-if="!inDevelopment"
@@ -27,6 +27,7 @@
       </div>
     </div>
 
+    <!-- Calendar -->
     <div class="q-mt-md">
       <Calendar
         transparent
@@ -39,45 +40,16 @@
       />
     </div>
 
-    <div v-if="workouts?.length" class="q-mt-md">
-      <q-list separator>
-        <q-item v-for="workout in workouts" :key="workout._id">
-          <q-item-section>
-            <q-item-label>
-              {{ moment(new Date(workout.createdAt)).format("LL") }}
-            </q-item-label>
-            <q-item-label caption lines="2">
-              <div class="flex q-gutter-sm">
-                <q-card
-                  v-for="(set, i) in getSets(workout.sets)"
-                  :key="set"
-                  class="bg-secondary"
-                >
-                  <q-card-section class="q-pa-xs">
-                    {{ set.weight }}
-                    {{ set.weight === 1 ? "" : "kgs" }}
-                  </q-card-section>
-                  <q-card-section
-                    class="bg-white text-secondary text-weight-bold q-pa-sm"
-                  >
-                    {{ set.reps }} reps
-                  </q-card-section>
-                </q-card>
-              </div>
-            </q-item-label>
-          </q-item-section>
-
-          <q-item-section side top>
-            <q-item-label caption>
-              {{ workout.progressive_overload }}
-            </q-item-label>
-            <ProgressionArrow
-              class="q-mt-xs"
-              :stats="workout.stats"
-              :progressive_overload="workout.progressive_overload"
-            />
-          </q-item-section>
-        </q-item>
+    <div v-if="exercise?.workouts?.length" class="q-mt-md">
+      <q-list>
+        <WorkoutRecord
+          v-for="(workout, i) in workouts"
+          :key="workout._id"
+          :workout="workout"
+          :progressive_overload="workout.progressive_overload"
+          :lastPO="exercise.workouts[i + 1]?.progressive_overload"
+          @refresh="fetchWorkout(exerciseId)"
+        />
       </q-list>
     </div>
 
@@ -103,15 +75,15 @@
 
 <script setup>
 import "v-calendar/style.css";
-import { Calendar, DatePicker } from "v-calendar";
+import { Calendar } from "v-calendar";
 
 import _ from "lodash";
 import moment from "moment";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed } from "vue";
 
-import ProgressionArrow from "src/components/exercises/ProgressionArrow.vue";
+import { WorkoutRecord } from "src/components";
 
 import { loadUsersExercise } from "src/utils";
 import { useAuthStore } from "stores/auth-store";
@@ -123,6 +95,7 @@ const props = defineProps(["exerciseId"]);
 
 const calendar = ref(null);
 const exercise = ref(null);
+const componentKey = ref(0);
 const disabledDates = ref([new Date("2023-07-13")]);
 const attributes = ref([
   {
@@ -134,14 +107,6 @@ const attributes = ref([
     dates: [],
   },
 ]);
-
-const getSets = (sets) => {
-  return Object.keys(sets)
-    .map((setNo) => {
-      return sets[setNo];
-    })
-    .filter((set) => set.reps);
-};
 
 const formatDateAsStr = (date) => moment(new Date(date)).format("YYYY-MM-DD");
 
@@ -229,10 +194,16 @@ const initializeCalendar = (workouts) => {
 };
 
 const fetchWorkout = async (id) => {
+  componentKey.value += 1;
   $q.loading.show();
 
   try {
     exercise.value = await loadUsersExercise(id, authStore.authUser.uid);
+    if (!exercise.value?.workouts.length) {
+      router.push("/");
+      return;
+    }
+
     initializeCalendar(exercise.value?.workouts);
   } catch (e) {
     console.log(e);

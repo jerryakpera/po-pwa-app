@@ -78,10 +78,29 @@ export const loadWorkouts = async () => {
   }
 };
 
+export const getUsersWorkouts = async (uid) => {
+  try {
+    const { data } = await api.get(`/workouts/${uid}`);
+    const { exercises } = data;
+
+    return exercises;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const createWorkout = async (payload) => {
   try {
     await api.post("/workouts", payload);
   } catch (e) {
     console.log(e);
+  }
+};
+
+export const deleteWorkout = async (workoutId) => {
+  try {
+    await api.delete(`/workouts/${workoutId}`);
+  } catch (e) {
+    throw e;
   }
 };

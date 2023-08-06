@@ -58,10 +58,11 @@
         :exercise="exercise"
       >
         <template #stats>
-          <Progression
+          <!-- <Progression
             :workouts="[...exercise.workouts].slice(-7)"
             :totalProgressiveOverload="exercise?.totalProgressiveOverload"
-          />
+          /> -->
+          <Progression :exercise="exercise" />
         </template>
       </ExerciseCard>
     </div>
@@ -74,7 +75,7 @@ import { useQuasar, debounce } from "quasar";
 
 import { useAuthStore } from "stores/auth-store";
 import { useWorkoutStore } from "stores/workout-store";
-import { loadWorkoutExercises, getTargetMuscles } from "src/utils";
+import { getUsersWorkouts, getTargetMuscles } from "src/utils";
 
 import { Progression, ExerciseCard } from "src/components";
 
@@ -114,7 +115,7 @@ const fetchExercises = async () => {
   $q.loading.show();
 
   try {
-    const data = await loadWorkoutExercises(authStore.authUser?.uid);
+    const data = await getUsersWorkouts(authStore.authUser?.uid);
 
     workoutStore.exercises = [...data];
     exercises.value = [...data];
