@@ -1,6 +1,6 @@
 <template>
-  <div class="q-px-sm">
-    <div class="chips">
+  <div>
+    <div>
       <q-chip square dense>
         <q-avatar
           text-color="white"
@@ -52,7 +52,7 @@
       </q-chip>
     </div>
 
-    <div class="stats q-py-xs">
+    <div class="stats q-py-xs q-px-sm">
       <div v-for="(workout, i) in exercise.workouts" :key="workout._id">
         <ProgressionArrow
           :progressive_overload="workout.progressive_overload"

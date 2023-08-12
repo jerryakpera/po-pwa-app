@@ -26,6 +26,51 @@
       </div>
     </div>
 
+    <q-card flat bordered class="bg-dark q-mt-sm" v-if="highestWorkout">
+      <q-card-section class="q-pa-xs q-px-sm">
+        <div class="q-my-xs">
+          {{ moment(new Date(highestWorkout.createdAt)).format("LL") }} - your
+          best workout
+        </div>
+        <div class="flex q-gutter-sm">
+          <q-card
+            flat
+            v-for="(set, i) in getSets(highestWorkout.sets)"
+            :key="set"
+            class="bg-secondary"
+          >
+            <q-card-section class="q-pa-xs">
+              {{ set.weight }}
+              {{ set.weight === 1 ? "" : "kgs" }}
+            </q-card-section>
+            <q-card-section
+              class="bg-white text-secondary text-weight-bold q-pa-sm"
+            >
+              {{ set.reps }} reps
+            </q-card-section>
+          </q-card>
+        </div>
+
+        <q-linear-progress
+          rounded
+          size="25px"
+          class="q-mt-sm"
+          :color="progressColor"
+          v-if="workoutsData?._id"
+          :value="workoutProgress"
+        >
+          <div class="absolute-full flex flex-center">
+            <q-badge
+              color="white"
+              text-color="dark"
+              :label="progressLabel"
+              class="text-weight-bold"
+            />
+          </div>
+        </q-linear-progress>
+      </q-card-section>
+    </q-card>
+
     <q-card class="bg-dark q-mt-sm" flat>
       <q-card-actions>
         <div class="text-body1">Record your sets</div>
@@ -148,21 +193,29 @@
 
 <script setup>
 import _ from "lodash";
+import moment from "moment";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import { ref, onMounted, computed, watch } from "vue";
 
 import { useAuthStore } from "stores/auth-store";
 import { useConfirmation } from "src/composables";
-import { loadExercise, createWorkout } from "src/utils";
+import {
+  loadExercise,
+  createWorkout,
+  fetchUsersExerciseWorkouts,
+} from "src/utils";
+
+import { ProgressionArrow } from "src/components";
 
 const $q = useQuasar();
 const router = useRouter();
 const authStore = useAuthStore();
 const props = defineProps(["exerciseId"]);
 
-const componentKey = ref(0);
 const exercise = ref(null);
+const componentKey = ref(0);
+const workoutsData = ref(null);
 const workout = ref({
   1: {
     weight: "",
@@ -170,6 +223,25 @@ const workout = ref({
     overload: "",
     type: "number",
   },
+});
+
+const minPO = computed(() => workoutsData.value?.minPO);
+const maxPO = computed(() => workoutsData.value?.maxPO);
+const averagePO = computed(() => workoutsData.value?.averagePO);
+const sortedWorkouts = computed(() => workoutsData.value?.sortedWorkouts);
+
+const sortedPOWorkouts = computed(() => {
+  return workoutsData.value?.workouts.sort((a, b) => {
+    return a.progressive_overload - b.progressive_overload;
+  });
+});
+const lowestWorkout = computed(() => {
+  if (!sortedPOWorkouts.value) return;
+  return sortedPOWorkouts.value[0];
+});
+const highestWorkout = computed(() => {
+  if (!sortedPOWorkouts.value) return;
+  return sortedPOWorkouts.value[sortedPOWorkouts.value?.length - 1];
 });
 
 const sets = computed(() => Object.keys(workout.value));
@@ -182,6 +254,66 @@ const totalOverload = computed(() => {
 
   return String(total);
 });
+
+const progressLabel = computed(() => {
+  const progress = Number(totalOverload.value);
+
+  if (progress < workoutsData.value?.minPO) {
+    return "vs lowest";
+  }
+
+  return "vs highest";
+});
+
+const progressColor = computed(() => {
+  const progress = Number(totalOverload.value);
+
+  if (progress < workoutsData.value?.minPO) {
+    return "negative";
+  }
+
+  if (progress < workoutsData.value?.averagePO) {
+    return "accent";
+  }
+
+  return "green-7";
+});
+
+const currentWorkout = computed(() => {
+  const progress = Number(totalOverload.value);
+
+  if (progress < workoutsData.value?.minPO) {
+    return lowestWorkout.value;
+  }
+
+  return highestWorkout.value;
+});
+
+const workoutProgress = computed(() => {
+  const progress = Number(totalOverload.value);
+
+  if (progress < workoutsData.value?.minPO) {
+    return Number(progress / workoutsData.value?.minPO);
+  }
+
+  if (progress < workoutsData.value?.averagePO) {
+    return Number(progress / workoutsData.value?.averagePO);
+  }
+
+  if (progress < workoutsData.value?.maxPO) {
+    return Number(progress / workoutsData.value?.maxPO);
+  }
+
+  return 1;
+});
+
+const getSets = (sets) => {
+  return Object.keys(sets)
+    .map((setNo) => {
+      return sets[setNo];
+    })
+    .filter((set) => set.reps);
+};
 
 const handleRemove = ({ reset }, set) => {
   const filteredWorkout = {};
@@ -261,6 +393,10 @@ const fetchWorkout = async (id) => {
 
   try {
     exercise.value = await loadExercise(id);
+    workoutsData.value = await fetchUsersExerciseWorkouts(
+      id,
+      authStore.authUser.uid
+    );
   } catch (e) {
     console.log(e);
   }

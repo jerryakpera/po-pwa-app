@@ -4,40 +4,51 @@
       class="q-pa-none"
       :style="`background: rgba(${hexToRgb(bgColor)}, 0.3)`"
     >
-      <div class="row">
+      <div class="row items-start">
         <div class="col-3" v-if="!inDevelopment">
-          <q-img :src="exercise.demonstration" style="height: 100%" />
+          <q-img
+            :src="exercise.demonstration"
+            style="
+              height: 100%;
+              border-top-left-radius: 5px;
+              border-bottom-right-radius: 5px;
+            "
+          />
         </div>
 
         <div
           :class="inDevelopment ? 'col-12' : 'col-9'"
           class="items-center q-pa-xs q-mt-none q-pt-none row"
         >
-          <div class="col-10 q-px-sm">
-            <div
-              class="text-accent text-weight-medium text-body2"
-              :class="exercise.workouts.length ? 'cursor-pointer' : ''"
-              @click="openWorkouts(exercise._id)"
-            >
-              {{ _.capitalize(exercise.name) }}
+          <div class="column full-width">
+            <div class="row">
+              <div class="col-10 q-px-sm">
+                <div
+                  class="text-accent text-weight-medium text-body2"
+                  :class="exercise.workouts.length ? 'cursor-pointer' : ''"
+                  @click="openWorkouts(exercise._id)"
+                >
+                  {{ _.capitalize(exercise.name) }}
+                </div>
+                <div class="text-light text-caption">
+                  {{ _.capitalize(exercise.target) }} |
+                  {{ _.capitalize(exercise.bodyPart) }}
+                </div>
+              </div>
+              <div class="col-2">
+                <q-btn
+                  no-caps
+                  color="positive"
+                  class="full-width"
+                  icon="las la-dumbbell"
+                  :to="`/workouts/${exercise._id}/new`"
+                />
+              </div>
             </div>
-            <div class="text-light text-caption">
-              {{ _.capitalize(exercise.target) }} |
-              {{ _.capitalize(exercise.bodyPart) }}
-            </div>
-          </div>
-          <div class="col-2">
-            <q-btn
-              no-caps
-              color="positive"
-              class="full-width"
-              icon="las la-dumbbell"
-              :to="`/workouts/${exercise._id}/new`"
-            />
+            <div></div>
           </div>
         </div>
       </div>
-
       <slot name="stats" />
     </q-card-section>
   </q-card>

@@ -22,18 +22,12 @@ export const loadUsersExercise = async (exerciseId, uid) => {
   }
 };
 
-export const loadExercises = async (q) => {
+export const fetchUsersExerciseWorkouts = async (exerciseId, uid) => {
   try {
-    const queryParams = new URLSearchParams({
-      q,
-    });
+    const { data } = await api.get(`/workouts/${exerciseId}/${uid}`);
+    const { exercise } = data;
 
-    const url = q ? `/exercises?${queryParams}` : "/exercises";
-
-    const { data } = await api.get(url);
-    const { exercises } = data;
-
-    return exercises;
+    return exercise;
   } catch (e) {
     console.log(e);
   }
@@ -48,17 +42,6 @@ export const loadAllExercises = async (q) => {
     const url = q ? `/exercises/all?${queryParams}` : "/exercises/all";
 
     const { data } = await api.get(url);
-    const { exercises } = data;
-
-    return exercises;
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-export const loadWorkoutExercises = async (uid) => {
-  try {
-    const { data } = await api.get(`/exercises/workouts/${uid}`);
     const { exercises } = data;
 
     return exercises;

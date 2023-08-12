@@ -8,6 +8,12 @@ export const getPercentageDiff = (newNumber, originalNumber) => {
   return percentDiff.toFixed(2);
 };
 
+export const getFractionDiff = (newNumber, originalNumber) => {
+  if (!originalNumber) return "100";
+  const increase = newNumber - originalNumber;
+  return increase / originalNumber;
+};
+
 export const getColors = (percent) => {
   const percentNumber = Number(percent);
 
