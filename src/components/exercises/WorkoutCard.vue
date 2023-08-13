@@ -6,14 +6,27 @@
           <img :src="exercise.demonstration" alt="Profile Picture" />
         </div>
         <div class="profile-description">
-          <div class="text-white text-body1">
+          <div
+            class="text-body1"
+            :class="
+              exercise.workouts.length
+                ? 'cursor-pointer text-accent text-weight-bold'
+                : 'text-white'
+            "
+            @click="openWorkouts(exercise._id)"
+          >
             {{ _.capitalize(exercise.name) }}
           </div>
           <p class="username">@qusai_k09</p>
         </div>
       </div>
       <div class="menu-bar q-pr-sm">
-        <q-btn label="w" color="accent" round />
+        <q-btn
+          label="w"
+          color="accent"
+          round
+          :to="`/workouts/${exercise._id}/new`"
+        />
       </div>
     </div>
     <slot name="stats" />
@@ -23,9 +36,12 @@
 <script setup>
 import _ from "lodash";
 
-import { ProgressBar } from "components";
-
 const props = defineProps(["exercise"]);
+
+const openWorkouts = (id) => {
+  if (!props.exercise?.workouts?.length) return;
+  router.push(`/workouts/${id}`);
+};
 </script>
 
 <style lang="scss" scoped>

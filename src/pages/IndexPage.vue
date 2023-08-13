@@ -30,28 +30,18 @@
     <q-btn-toggle
       spread
       no-caps
-      disable
-      size="sm"
       color="white"
       class="q-my-sm"
       text-color="black"
-      toggle-color="blue-5"
+      toggle-color="blue-7"
       v-model="workoutStore.comparison"
       :options="[
-        { label: 'vs last workout', value: 'last' },
-        { label: 'vs average workout', value: 'average' },
+        { label: 'Use arrows', value: 'arrows' },
+        { label: 'Use bars', value: 'bars' },
       ]"
-    >
-      <q-tooltip class="text-body2">
-        {{
-          workoutStore.comparison === "last"
-            ? "Will display your progression in comparison with your last workout for that exercise"
-            : "Will display your progression in comparison with your average workout for that exercise"
-        }}
-      </q-tooltip>
-    </q-btn-toggle>
+    />
 
-    <div class="q-mt-sm">
+    <div class="q-mt-sm" v-if="workoutStore.comparison === 'bars'">
       <WorkoutCard
         v-for="exercise in exercises"
         :key="exercise._id"
@@ -61,10 +51,20 @@
         <template #stats>
           <WorkoutCardProgression :exercise="exercise" />
         </template>
-        <!-- <template #stats>
-          <Progression :exercise="exercise" />
-        </template> -->
       </WorkoutCard>
+    </div>
+
+    <div class="q-mt-sm" v-if="workoutStore.comparison === 'arrows'">
+      <ExerciseCard
+        v-for="exercise in exercises"
+        :key="exercise._id"
+        :exercise="exercise"
+        class="q-mb-md q-mt-sm"
+      >
+        <template #stats>
+          <Progression :exercise="exercise" />
+        </template>
+      </ExerciseCard>
     </div>
   </div>
 </template>

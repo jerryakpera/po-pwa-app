@@ -4,7 +4,7 @@ export const useWorkoutStore = defineStore("workout", {
   state: () => ({
     workouts: [],
     exercises: [],
-    comparison: "last",
+    comparison: "arrows",
   }),
 
   getters: {},
