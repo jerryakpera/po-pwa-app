@@ -30,6 +30,22 @@ export const getColors = (percent) => {
   if (percentNumber > 0) return "54C59D";
 };
 
+export const getColors2 = (percent) => {
+  const percentNumber = Number(percent);
+
+  if (percentNumber === 0) return "AAAAAA";
+
+  if (percentNumber < -22.5) return "FF0000 ";
+  if (percentNumber < -15) return "FF1A00";
+  if (percentNumber < -7.5) return "FF3300";
+  if (percentNumber < -0) return "FF4D00";
+
+  if (percentNumber > 22.5) return "00FF00 ";
+  if (percentNumber > 15) return "FFCC00 ";
+  if (percentNumber > 7.5) return "FFB300";
+  if (percentNumber > 0) return "FF9900";
+};
+
 export const hexToRgb = (hex) => {
   var bigint = parseInt(hex, 16);
   var r = (bigint >> 16) & 255;

@@ -52,19 +52,19 @@
     </q-btn-toggle>
 
     <div class="q-mt-sm">
-      <ExerciseCard
+      <WorkoutCard
         v-for="exercise in exercises"
         :key="exercise._id"
         :exercise="exercise"
+        class="q-mb-md q-mt-sm"
       >
         <template #stats>
-          <!-- <Progression
-            :workouts="[...exercise.workouts].slice(-7)"
-            :totalProgressiveOverload="exercise?.totalProgressiveOverload"
-          /> -->
-          <Progression :exercise="exercise" />
+          <WorkoutCardProgression :exercise="exercise" />
         </template>
-      </ExerciseCard>
+        <!-- <template #stats>
+          <Progression :exercise="exercise" />
+        </template> -->
+      </WorkoutCard>
     </div>
   </div>
 </template>
@@ -77,7 +77,12 @@ import { useAuthStore } from "stores/auth-store";
 import { useWorkoutStore } from "stores/workout-store";
 import { getUsersWorkouts, getTargetMuscles } from "src/utils";
 
-import { Progression, ExerciseCard } from "src/components";
+import {
+  Progression,
+  ExerciseCard,
+  WorkoutCard,
+  WorkoutCardProgression,
+} from "src/components";
 
 const $q = useQuasar();
 const authStore = useAuthStore();
