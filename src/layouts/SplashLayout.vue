@@ -1,5 +1,13 @@
 <template>
-  <q-layout view="hHh lpR fFf" style="background-color: black">
+  <q-layout
+    view="hHh lpR fFf"
+    style="
+      background-color: black;
+      background: linear-gradient(black) url('/gym.jpg');
+      background-position: center;
+      background-repeat: no-repeat;
+    "
+  >
     <div style="height: 100vh">
       <div
         class="text-center text-weight-bold text-h3 q-pt-md font2 flex items-center"
@@ -10,25 +18,17 @@
         <span> Iron </span>
         <span class="text-accent">Diary</span>
       </div>
-      <q-img
-        src="/gym.jpg"
-        style="
-          height: 50%;
-          margin-top: 150px;
-          box-shadow: 1px 2px 3px rgba(0, 0, 0, 0, 0.3);
-        "
-      />
-      <q-card flat square class="transparent">
-        <q-card-section>
-          <q-page-container>
-            <router-view v-slot="{ Component }">
-              <transition name="fade" mode="out-in">
-                <component :is="Component" />
-              </transition>
-            </router-view>
-          </q-page-container>
-        </q-card-section>
-      </q-card>
+
+      <q-page-container
+        style="position: fixed; bottom: 20px; width: 100%"
+        class="q-px-md"
+      >
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
+      </q-page-container>
     </div>
   </q-layout>
 </template>

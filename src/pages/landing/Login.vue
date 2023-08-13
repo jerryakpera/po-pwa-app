@@ -2,7 +2,6 @@
   <q-form
     ref="formRef"
     autocomplete="false"
-    style="margin-top: -195px"
     @submit.prevent.stop="handleFormSubmit"
     class="column q-col-gutter-sm full-width"
   >

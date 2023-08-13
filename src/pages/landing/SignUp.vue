@@ -2,7 +2,6 @@
   <q-form
     ref="formRef"
     autocomplete="off"
-    style="margin-top: -320px"
     @submit.prevent.stop="handleFormSubmit"
   >
     <div class="text-h4 splash-heading font1">Sign up</div>

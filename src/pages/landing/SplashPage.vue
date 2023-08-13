@@ -1,7 +1,7 @@
 <template>
-  <div style="margin-top: -165px">
-    <div class="text-h3 text-weight-bold q-mb-lg">Training & tracking</div>
-    <div class="text-h6 q-mt-md q-mb-xl">
+  <div style="margin-top: -90px">
+    <div class="text-h4 text-weight-bold q-mb-sm">Training & tracking</div>
+    <div class="text-body2 q-mt-md q-mb-md">
       Don't lapse on your progress. Record your sets while you train and have
       access to your progression
     </div>
