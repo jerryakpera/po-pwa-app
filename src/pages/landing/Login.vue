@@ -1,76 +1,71 @@
 <template>
-  <q-card
-    class="q-pa-lg full-width splash-card"
-    style="background-color: rgba(0, 0, 0, 0.8)"
+  <q-form
+    ref="formRef"
+    autocomplete="false"
+    style="margin-top: -195px"
+    @submit.prevent.stop="handleFormSubmit"
+    class="column q-col-gutter-sm full-width"
   >
-    <q-form
-      ref="formRef"
-      autocomplete="false"
-      class="column q-col-gutter-sm"
-      @submit.prevent.stop="handleFormSubmit"
+    <div class="text-h4 font1 text-weight-medium">Login</div>
+    <q-input
+      dark
+      outlined
+      type="text"
+      color="info"
+      label="email"
+      v-model="user.email"
+      :rules="[isRequired, isEmail]"
+    />
+
+    <q-input
+      outlined
+      color="info"
+      label="password"
+      v-model="user.password"
+      :type="revealPassword ? 'text' : 'password'"
     >
-      <div class="text-h4 splash-heading font1">Login</div>
-      <q-input
-        dark
-        rounded
-        outlined
-        type="text"
-        color="info"
-        label="email"
-        v-model="user.email"
-        :rules="[isRequired, isEmail]"
+      <template #append>
+        <q-btn dense round @click="revealPassword = !revealPassword">
+          <POIcon
+            class="text-h5"
+            :icon="revealPassword ? 'mdi:eye-off-outline' : 'mdi:eye-outline'"
+          />
+        </q-btn>
+      </template>
+    </q-input>
+
+    <div class="text-light text-body2 q-mb-sm">
+      Dont have an account?
+      <router-link to="/landing/sign-up" class="text-accent"
+        >Sign up</router-link
+      >
+    </div>
+
+    <div class="q-px-none q-mt-sm">
+      <q-btn
+        no-caps
+        size="lg"
+        label="Login"
+        type="submit"
+        color="blue-10"
+        class="full-width q-mb-sm"
       />
 
-      <q-input
-        rounded
-        outlined
-        color="info"
-        label="password"
-        v-model="user.password"
-        :type="revealPassword ? 'text' : 'password'"
+      <q-btn
+        no-caps
+        size="lg"
+        color="white"
+        class="full-width"
+        text-color="blue-10"
+        @click="handleGoogleLogin"
       >
-        <template #append>
-          <q-btn dense round @click="revealPassword = !revealPassword">
-            <POIcon
-              class="text-h5"
-              :icon="revealPassword ? 'mdi:eye-off-outline' : 'mdi:eye-outline'"
-            />
-          </q-btn>
-        </template>
-      </q-input>
-
-      <div class="text-light text-caption q-my-sm">
-        Dont have an account?
-        <router-link to="/landing/sign-up" class="text-accent"
-          >Sign up</router-link
-        >
-      </div>
-
-      <div class="q-px-none q-mt-sm">
-        <q-btn
-          no-caps
-          rounded
-          label="Login"
-          type="submit"
-          color="secondary"
-          class="full-width q-mb-sm"
-        />
-
-        <q-btn
-          no-caps
-          rounded
-          color="info"
-          class="full-width"
-          @click="handleGoogleLogin"
-        >
-          <div class="full-height flex items-center">
-            <POIcon icon="akar-icons:google-fill" class="text-h5 q-mr-xs" />
-            Login with Google
-          </div>
-        </q-btn>
-      </div>
-    </q-form>
-  </q-card>
+        <div class="full-height flex items-center">
+          <POIcon icon="akar-icons:google-fill" class="text-h5 q-mr-xs" />
+          Login with Google
+        </div>
+      </q-btn>
+    </div>
+  </q-form>
 </template>
 
 <script setup>

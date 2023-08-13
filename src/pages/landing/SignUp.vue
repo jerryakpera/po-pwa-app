@@ -1,18 +1,15 @@
 <template>
-  <q-card
-    class="q-pa-lg full-width splash-card"
-    style="background-color: rgba(0, 0, 0, 0.8)"
+  <q-form
+    ref="formRef"
+    autocomplete="off"
+    style="margin-top: -320px"
+    @submit.prevent.stop="handleFormSubmit"
   >
-    <q-form
-      ref="formRef"
-      autocomplete="off"
-      class="column q-col-gutter-sm"
-      @submit.prevent.stop="handleFormSubmit"
-    >
-      <div class="text-h4 splash-heading font1">Sign up</div>
+    <div class="text-h4 splash-heading font1">Sign up</div>
+
+    <div class="column q-col-gutter-sm">
       <q-input
         dark
-        rounded
         outlined
         type="text"
         color="info"
@@ -23,7 +20,6 @@
 
       <q-input
         dark
-        rounded
         outlined
         type="text"
         color="info"
@@ -33,7 +29,6 @@
       />
 
       <q-input
-        rounded
         outlined
         color="info"
         label="password"
@@ -58,7 +53,6 @@
       </q-input>
 
       <q-input
-        rounded
         outlined
         color="info"
         :rules="[passwordMatches]"
@@ -83,37 +77,38 @@
           </q-btn>
         </template>
       </q-input>
+    </div>
 
-      <div class="text-light text-caption q-my-sm">
-        Already have an account?
-        <router-link to="/landing/login" class="text-accent">Login</router-link>
-      </div>
+    <div class="text-light text-body2">
+      Already have an account?
+      <router-link to="/landing/login" class="text-accent">Login</router-link>
+    </div>
 
-      <div class="q-px-none q-mt-sm">
-        <q-btn
-          no-caps
-          rounded
-          type="submit"
-          label="Signup"
-          color="secondary"
-          class="full-width q-mb-sm"
-        />
+    <div class="q-px-none q-mt-sm">
+      <q-btn
+        no-caps
+        size="lg"
+        type="submit"
+        label="Signup"
+        color="blue-10"
+        class="full-width q-mb-sm"
+      />
 
-        <q-btn
-          no-caps
-          rounded
-          color="info"
-          class="full-width"
-          @click="handleGoogleLogin"
-        >
-          <div class="full-height flex items-center">
-            <POIcon icon="akar-icons:google-fill" class="text-h5 q-mr-xs" />
-            Signup with Google
-          </div>
-        </q-btn>
-      </div>
-    </q-form>
-  </q-card>
+      <q-btn
+        no-caps
+        size="lg"
+        color="white"
+        text-color="blue-10"
+        class="full-width"
+        @click="handleGoogleLogin"
+      >
+        <div class="full-height flex items-center">
+          <POIcon icon="akar-icons:google-fill" class="text-h5 q-mr-xs" />
+          Signup with Google
+        </div>
+      </q-btn>
+    </div>
+  </q-form>
 </template>
 
 <script setup>

@@ -1,35 +1,36 @@
 <template>
-  <q-card class="q-pa-lg splash-card transparent" flat>
-    <div>
-      <POIcon icon="arcticons:home-workouts" class="text-h1 text-yellow-6" />
+  <div style="margin-top: -165px">
+    <div class="text-h3 text-weight-bold q-mb-lg">Training & tracking</div>
+    <div class="text-h6 q-mt-md q-mb-xl">
+      Don't lapse on your progress. Record your sets while you train and have
+      access to your progression
     </div>
-    <div class="text-h4 splash-heading font1">Track your progression</div>
-    <div class="text-h6 font2 text-yellow">
-      and have access to your progression for each workout
-    </div>
-    <div class="q-px-none q-mt-sm row q-col-gutter-xs">
-      <div class="col-6">
+    <div class="row items-center q-col-gutter-xs">
+      <div class="col-10">
         <q-btn
-          no-caps
           rounded
-          color="info"
-          label="Login"
-          class="full-width"
-          to="/landing/login"
-        />
-      </div>
-      <div class="col-6">
-        <q-btn
-          no-caps
-          rounded
-          label="Sign up"
-          color="secondary"
-          class="full-width"
+          size="lg"
+          color="white"
+          text-color="dark"
+          label="Get Started"
           to="/landing/sign-up"
+          class="full-width text-weight-bold"
         />
       </div>
+      <div class="col-2">
+        <q-btn
+          round
+          size="lg"
+          color="white"
+          text-color="dark"
+          to="/landing/login"
+          class="text-weight-bold"
+        >
+          <POIcon class="text-h4" icon="mdi:login" />
+        </q-btn>
+      </div>
     </div>
-  </q-card>
+  </div>
 </template>
 
 <script setup>

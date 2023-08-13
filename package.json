@@ -2,13 +2,16 @@
   "name": "poverload",
   "version": "0.0.1",
   "description": "Workout Progression Tracker",
-  "productName": "POverload",
+  "productName": "Iron Diary",
   "author": "Jeremiah Akpera <jerryakpera@gmail.com>",
   "private": true,
   "scripts": {
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build"
+    "build": "quasar build -m pwa",
+    "icons": "icongenie generate -i AppIcon.png --skip-trim",
+    "splashscreen": "icongenie generate -f splashscreen -b SplashScreen.png --splashscreen-icon-ratio 0 --splashscreen-color 000000",
+    "deploy": "firebase deploy"
   },
   "dependencies": {
     "@iconify/vue": "^4.1.1",

@@ -1,12 +1,35 @@
 <template>
-  <q-layout view="hHh lpR fFf">
-    <q-page-container class="splash-page flex flex items-end justify-end">
-      <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <component :is="Component" />
-        </transition>
-      </router-view>
-    </q-page-container>
+  <q-layout view="hHh lpR fFf" style="background-color: black">
+    <div style="height: 100vh">
+      <div
+        class="text-center text-weight-bold text-h3 q-pt-md font2 flex items-center"
+      >
+        <q-btn to="/landing" round class="q-px-sm">
+          <POIcon icon="material-symbols:home-rounded" class="text-h3" />
+        </q-btn>
+        <span> Iron </span>
+        <span class="text-accent">Diary</span>
+      </div>
+      <q-img
+        src="/gym.jpg"
+        style="
+          height: 50%;
+          margin-top: 150px;
+          box-shadow: 1px 2px 3px rgba(0, 0, 0, 0, 0.3);
+        "
+      />
+      <q-card flat square class="transparent">
+        <q-card-section>
+          <q-page-container>
+            <router-view v-slot="{ Component }">
+              <transition name="fade" mode="out-in">
+                <component :is="Component" />
+              </transition>
+            </router-view>
+          </q-page-container>
+        </q-card-section>
+      </q-card>
+    </div>
   </q-layout>
 </template>
 
@@ -21,12 +44,8 @@ $q.dark.set(true);
 </script>
 
 <style lang="scss" scoped>
-.splash-page {
+.splash-layout {
   height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 1)),
-    url("./images/splash-bg-2.jpg");
-  background-size: 250%;
-  background-position: center;
 }
 
 .fade-enter-active,
