@@ -1,52 +1,57 @@
 <template>
-  <q-card class="q-mb-sm" flat>
+  <q-card flat>
     <q-card-section
       class="q-pa-none"
       :style="`background: rgba(${hexToRgb(bgColor)}, 0.3)`"
     >
       <div class="row items-start">
         <div class="col-3">
-          <q-img
-            :src="exercise.demonstration"
-            style="
-              height: 100%;
-              border-top-left-radius: 5px;
-              border-bottom-right-radius: 5px;
+          <router-link
+            :to="
+              exercise.workouts.length
+                ? `/workouts/${exercise._id}`
+                : `/workouts/${exercise._id}/new`
             "
-          />
+          >
+            <q-img
+              :src="exercise.demonstration"
+              style="
+                height: 100%;
+                border-top-left-radius: 5px;
+                border-bottom-right-radius: 5px;
+              "
+            />
+          </router-link>
         </div>
 
-        <div class="col-9 items-center q-pa-xs q-mt-none q-pt-none row">
+        <div class="col-9 items-center q-pa-xs q-px-sm q-mt-none q-pt-none row">
           <div class="column full-width">
-            <div class="row">
-              <div class="col-10 q-px-sm">
-                <div
-                  class="text-accent text-weight-medium text-body2"
-                  :class="exercise.workouts.length ? 'cursor-pointer' : ''"
-                  @click="openWorkouts(exercise._id)"
-                >
-                  {{ _.capitalize(exercise.name) }}
-                </div>
-                <div class="text-light text-caption">
-                  {{ _.capitalize(exercise.target) }} |
-                  {{ _.capitalize(exercise.bodyPart) }}
-                </div>
-              </div>
-              <div class="col-2">
-                <q-btn
-                  no-caps
-                  color="positive"
-                  class="full-width"
-                  icon="las la-dumbbell"
-                  :to="`/workouts/${exercise._id}/new`"
-                />
-              </div>
+            <div
+              class="text-accent text-weight-medium text-body2"
+              :class="exercise.workouts.length ? 'cursor-pointer' : ''"
+              @click="openWorkouts(exercise._id)"
+              style="
+                max-width: 100%;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+              "
+            >
+              {{ _.capitalize(exercise.name) }}
+
+              <q-tooltip class="text-body2" style="width: 300px">
+                {{ _.capitalize(exercise.name) }}
+              </q-tooltip>
             </div>
-            <div></div>
+            <div class="text-light text-caption">
+              {{ _.capitalize(exercise.target) }} |
+              {{ _.capitalize(exercise.bodyPart) }}
+            </div>
+
+            <slot name="stats" />
           </div>
         </div>
       </div>
-      <slot name="stats" />
     </q-card-section>
   </q-card>
 </template>
@@ -60,8 +65,6 @@ import { getPercentageDiff, getColors, hexToRgb } from "src/utils";
 
 const router = useRouter();
 const props = defineProps(["exercise"]);
-
-const inDevelopment = process.env.DEV;
 
 const poDifferenceWithAverage = computed(() => {
   if (!props.exercise?.sortedWorkouts?.length) return 0;

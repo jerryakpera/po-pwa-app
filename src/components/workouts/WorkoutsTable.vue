@@ -75,8 +75,20 @@
     </template>
 
     <template v-slot:item="props">
-      <div class="col-12 q-mb-sm grid-style-transition">
-        <ExerciseCard :exercise="props.row" />
+      <div class="full-width" v-if="workoutComparison === 'arrows'">
+        <ExerciseCard :exercise="props.row" class="q-mb-sm q-mt-sm">
+          <template #stats>
+            <Progression :exercise="props.row" />
+          </template>
+        </ExerciseCard>
+      </div>
+
+      <div class="full-width" v-if="workoutComparison === 'bars'">
+        <WorkoutCard :exercise="props.row" class="q-mb-sm q-mt-sm">
+          <template #stats>
+            <WorkoutCardProgression :exercise="props.row" />
+          </template>
+        </WorkoutCard>
       </div>
     </template>
   </q-table>
@@ -85,9 +97,17 @@
 <script setup>
 import _ from "lodash";
 import { computed, ref } from "vue";
-import { ExerciseCard } from "./exercises";
+import {
+  Progression,
+  WorkoutCard,
+  ExerciseCard,
+  WorkoutCardProgression,
+} from "../exercises";
+import { useWorkoutStore } from "stores/workout-store";
 
 const props = defineProps(["exercises"]);
+
+const workoutsStore = useWorkoutStore();
 
 const filter = ref("");
 const loading = ref(false);
@@ -115,6 +135,7 @@ const filterFn = (rows, terms) => {
   });
 };
 
+const workoutComparison = computed(() => workoutsStore.comparison);
 const rows = computed(() => {
   if (
     bodyPartsFilter.value.length === 0 &&

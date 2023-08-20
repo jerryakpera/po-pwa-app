@@ -1,72 +1,7 @@
 <template>
-  <div>
-    <q-input
-      dense
-      rounded
-      outlined
-      bottom-slots
-      color="accent"
-      v-model="search"
-      placeholder="search"
-      hint="Search your workouts"
-    >
-      <template v-slot:append>
-        <q-icon
-          name="close"
-          v-if="search !== ''"
-          @click="search = ''"
-          class="cursor-pointer"
-        />
-        <q-icon name="search" />
-      </template>
-    </q-input>
-
-    <div v-if="!exercises.length" class="q-my-md text-body1 font1">
-      Go to
-      <router-link to="/exercises" class="link">exercises</router-link> to
-      record your first workout
-    </div>
-
-    <q-btn-toggle
-      spread
-      no-caps
-      color="white"
-      class="q-my-sm"
-      text-color="black"
-      toggle-color="blue-7"
-      v-model="workoutStore.comparison"
-      :options="[
-        { label: 'Use arrows', value: 'arrows' },
-        { label: 'Use bars', value: 'bars' },
-      ]"
-    />
-
-    <div class="q-mt-sm" v-if="workoutStore.comparison === 'bars'">
-      <WorkoutCard
-        v-for="exercise in exercises"
-        :key="exercise._id"
-        :exercise="exercise"
-        class="q-mb-md q-mt-sm"
-      >
-        <template #stats>
-          <WorkoutCardProgression :exercise="exercise" />
-        </template>
-      </WorkoutCard>
-    </div>
-
-    <div class="q-mt-sm" v-if="workoutStore.comparison === 'arrows'">
-      <ExerciseCard
-        v-for="exercise in exercises"
-        :key="exercise._id"
-        :exercise="exercise"
-        class="q-mb-md q-mt-sm"
-      >
-        <template #stats>
-          <Progression :exercise="exercise" />
-        </template>
-      </ExerciseCard>
-    </div>
-  </div>
+  <q-page>
+    <WorkoutsTable :exercises="exercises" />
+  </q-page>
 </template>
 
 <script setup>
@@ -82,6 +17,7 @@ import {
   ExerciseCard,
   WorkoutCard,
   WorkoutCardProgression,
+  WorkoutsTable,
 } from "src/components";
 
 const $q = useQuasar();

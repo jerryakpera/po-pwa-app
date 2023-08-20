@@ -3,8 +3,14 @@
     view="hHh lpR fFf"
     style="
       background-color: black;
-      background: linear-gradient(black) url('/gym.jpg');
+      background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.62),
+          rgba(0, 0, 0, 0.93)
+        ),
+        url('https://images.unsplash.com/photo-1491756975177-a13d74ed1e2f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=415&q=80');
       background-position: center;
+      background-size: cover;
       background-repeat: no-repeat;
     "
   >
@@ -12,7 +18,7 @@
       <div
         class="text-center text-weight-bold text-h3 q-pt-md font2 flex items-center"
       >
-        <q-btn to="/landing" round class="q-px-sm">
+        <q-btn flat to="/landing" round class="q-px-sm">
           <POIcon icon="material-symbols:home-rounded" class="text-h3" />
         </q-btn>
         <span> Iron </span>
@@ -35,10 +41,8 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import { useAuthStore } from "stores/auth-store";
 
 const $q = useQuasar();
-const authStore = useAuthStore();
 
 $q.dark.set(true);
 </script>

@@ -1,37 +1,88 @@
 <template>
   <div>
-    <div class="flex items-center q-gutter-md">
-      <q-img
-        :src="exercise?.demonstration"
-        style="width: 80px; height: 80px; border-radius: 10px"
-      />
+    <div class="row items-start">
+      <div class="col-3">
+        <router-link :to="`/workouts/${exercise?._id}`">
+          <q-img
+            :src="exercise?.demonstration"
+            style="height: 100%; border-radius: 5px"
+          />
+        </router-link>
+      </div>
 
-      <div>
-        <div class="text-h6 font1 text-weight-medium">
-          {{ _.capitalize(exercise?.name) }}
-        </div>
-        <div class="text-light text-body2 flex q-col-gutter-sm">
-          <div>
-            {{ _.capitalize(exercise?.target) }}
+      <div class="col-9 items-center q-pa-xs q-px-sm q-mt-none q-pt-none row">
+        <div class="column full-width">
+          <div class="text-accent text-weight-medium text-body2">
+            {{ _.capitalize(exercise?.name) }}
           </div>
-          <div>|</div>
-          <div>
-            {{ _.capitalize(exercise?.bodyPart) }}
-          </div>
-          <div>|</div>
-          <div>
+          <div class="text-light text-caption">
+            {{ _.capitalize(exercise?.target) }} |
+            {{ _.capitalize(exercise?.bodyPart) }} |
             {{ _.capitalize(exercise?.equipment) }}
+          </div>
+
+          <div v-if="exercise && exercise.workouts">
+            <Progression :exercise="exercise" />
           </div>
         </div>
       </div>
     </div>
 
-    <q-card flat bordered class="bg-dark q-mt-sm" v-if="highestWorkout">
+    <q-btn-toggle
+      spread
+      no-caps
+      color="white"
+      class="q-my-sm"
+      v-model="versus"
+      text-color="black"
+      toggle-color="blue-7"
+      :options="[
+        { label: 'Last', value: 'last' },
+        { label: 'Highest', value: 'highest' },
+        { label: 'Lowest', value: 'lowest' },
+      ]"
+    />
+
+    <q-card
+      flat
+      bordered
+      class="bg-dark q-mt-sm"
+      v-if="versus === 'last' && lastWorkout"
+    >
       <q-card-section class="q-pa-xs q-px-sm">
-        <div class="q-my-xs">
-          {{ moment(new Date(highestWorkout.createdAt)).format("LL") }} - your
-          best workout
+        <div class="q-my-xs">Your last workout</div>
+        <div class="flex q-gutter-sm">
+          <q-card
+            flat
+            v-for="(set, i) in getSets(lastWorkout.sets)"
+            :key="set"
+            class="bg-secondary"
+          >
+            <q-card-section class="q-pa-xs">
+              <span v-if="set.weight === 'body' || !set.weight"> body </span>
+              <span v-else>
+                {{ set.weight }}
+                {{ set.weight === 1 ? "" : "kgs" }}
+              </span>
+            </q-card-section>
+            <q-card-section
+              class="bg-white text-secondary text-weight-bold q-pa-xs"
+            >
+              {{ set.reps }} reps
+            </q-card-section>
+          </q-card>
         </div>
+      </q-card-section>
+    </q-card>
+
+    <q-card
+      flat
+      bordered
+      class="bg-dark q-mt-sm"
+      v-if="versus === 'highest' && highestWorkout"
+    >
+      <q-card-section class="q-pa-xs q-px-sm">
+        <div class="q-my-xs">Your highest workout</div>
         <div class="flex q-gutter-sm">
           <q-card
             flat
@@ -40,36 +91,71 @@
             class="bg-secondary"
           >
             <q-card-section class="q-pa-xs">
-              {{ set.weight }}
-              {{ set.weight === 1 ? "" : "kgs" }}
+              <span v-if="set.weight === 'body' || !set.weight"> body </span>
+              <span v-else>
+                {{ set.weight }}
+                {{ set.weight === 1 ? "" : "kgs" }}
+              </span>
             </q-card-section>
             <q-card-section
-              class="bg-white text-secondary text-weight-bold q-pa-sm"
+              class="bg-white text-secondary text-weight-bold q-pa-xs"
             >
               {{ set.reps }} reps
             </q-card-section>
           </q-card>
         </div>
-
-        <q-linear-progress
-          rounded
-          size="25px"
-          class="q-mt-sm"
-          :color="progressColor"
-          v-if="workoutsData?._id"
-          :value="workoutProgress"
-        >
-          <div class="absolute-full flex flex-center">
-            <q-badge
-              color="white"
-              text-color="dark"
-              :label="progressLabel"
-              class="text-weight-bold"
-            />
-          </div>
-        </q-linear-progress>
       </q-card-section>
     </q-card>
+
+    <q-card
+      flat
+      bordered
+      class="bg-dark q-mt-sm"
+      v-if="versus === 'lowest' && lowestWorkout"
+    >
+      <q-card-section class="q-pa-xs q-px-sm">
+        <div class="q-my-xs">Your lowest workout</div>
+        <div class="flex q-gutter-sm">
+          <q-card
+            flat
+            v-for="(set, i) in getSets(lowestWorkout.sets)"
+            :key="set"
+            class="bg-secondary"
+          >
+            <q-card-section class="q-pa-xs">
+              <span v-if="set.weight === 'body' || !set.weight"> body </span>
+              <span v-else>
+                {{ set.weight }}
+                {{ set.weight === 1 ? "" : "kgs" }}
+              </span>
+            </q-card-section>
+            <q-card-section
+              class="bg-white text-secondary text-weight-bold q-pa-xs"
+            >
+              {{ set.reps }} reps
+            </q-card-section>
+          </q-card>
+        </div>
+      </q-card-section>
+    </q-card>
+
+    <q-linear-progress
+      rounded
+      size="25px"
+      class="q-mt-sm"
+      :color="progressColor"
+      v-if="workoutsData?._id"
+      :value="workoutProgress"
+    >
+      <div class="absolute-full flex flex-center">
+        <q-badge
+          color="white"
+          text-color="dark"
+          :label="progressLabel"
+          class="text-weight-bold"
+        />
+      </div>
+    </q-linear-progress>
 
     <q-card class="bg-dark q-mt-sm" flat>
       <q-card-actions>
@@ -206,13 +292,14 @@ import {
   fetchUsersExerciseWorkouts,
 } from "src/utils";
 
-import { ProgressionArrow } from "src/components";
+import { Progression } from "src/components";
 
 const $q = useQuasar();
 const router = useRouter();
 const authStore = useAuthStore();
 const props = defineProps(["exerciseId"]);
 
+const versus = ref("last");
 const exercise = ref(null);
 const componentKey = ref(0);
 const workoutsData = ref(null);
@@ -225,14 +312,14 @@ const workout = ref({
   },
 });
 
-const minPO = computed(() => workoutsData.value?.minPO);
-const maxPO = computed(() => workoutsData.value?.maxPO);
-const averagePO = computed(() => workoutsData.value?.averagePO);
-const sortedWorkouts = computed(() => workoutsData.value?.sortedWorkouts);
-
 const sortedPOWorkouts = computed(() => {
   return workoutsData.value?.workouts.sort((a, b) => {
     return a.progressive_overload - b.progressive_overload;
+  });
+});
+const sortedByDatesWorkouts = computed(() => {
+  return workoutsData.value?.workouts.sort((a, b) => {
+    return a.createdAt - b.createdAt;
   });
 });
 const lowestWorkout = computed(() => {
@@ -241,7 +328,44 @@ const lowestWorkout = computed(() => {
 });
 const highestWorkout = computed(() => {
   if (!sortedPOWorkouts.value) return;
-  return sortedPOWorkouts.value[sortedPOWorkouts.value?.length - 1];
+  return sortedPOWorkouts.value.reverse()[0];
+});
+const lastWorkout = computed(() => {
+  if (!sortedByDatesWorkouts.value) return;
+  return sortedByDatesWorkouts.value[sortedByDatesWorkouts.value?.length - 1];
+});
+const workouts = computed(() => {
+  let maxWeight = 0;
+  let maxPOWorkout = {};
+  let maxWeightWorkout = {};
+
+  for (let i = 0; i < sortedPOWorkouts.value?.length; i++) {
+    const currentWorkout = sortedPOWorkouts.value[i];
+    const { progressive_overload, sets } = currentWorkout;
+
+    const setsArray = Object.keys(sets).map((key) => sets[key]);
+
+    const _maxWeight = setsArray.sort((a, b) => {
+      return b.weight - a.weight;
+    })[0];
+
+    if (_maxWeight.weight > maxWeight) {
+      maxWeight = _maxWeight.weight;
+      maxWeightWorkout = currentWorkout;
+    }
+
+    if (
+      !maxPOWorkout?.progressive_overload ||
+      progressive_overload > maxPOWorkout?.progressive_overload
+    ) {
+      maxPOWorkout = currentWorkout;
+    }
+  }
+
+  return {
+    maxWeightWorkout,
+    maxPOWorkout,
+  };
 });
 
 const sets = computed(() => Object.keys(workout.value));

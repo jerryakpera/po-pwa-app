@@ -1,34 +1,40 @@
 <template>
   <div :key="componentKey">
-    <div class="flex items-center q-gutter-md">
-      <q-img
-        v-if="!inDevelopment"
-        :src="exercise?.demonstration"
-        style="width: 80px; height: 80px; border-radius: 10px"
-      />
+    <div class="row items-start">
+      <div class="col-3">
+        <q-img
+          :src="exercise?.demonstration"
+          style="height: 100%; border-radius: 5px"
+        />
+      </div>
 
-      <div>
-        <div class="text-h6 font1 text-weight-medium">
-          {{ _.capitalize(exercise?.name) }}
-        </div>
-        <div class="text-light text-body2 flex q-col-gutter-sm">
-          <div>
-            {{ _.capitalize(exercise?.target) }}
+      <div class="col-9 items-center q-pa-xs q-px-sm q-mt-none q-pt-none row">
+        <div class="column full-width">
+          <div class="text-accent text-weight-medium text-body2">
+            {{ _.capitalize(exercise?.name) }}
           </div>
-          <div>|</div>
-          <div>
-            {{ _.capitalize(exercise?.bodyPart) }}
-          </div>
-          <div>|</div>
-          <div>
+          <div class="text-light text-caption">
+            {{ _.capitalize(exercise?.target) }} |
+            {{ _.capitalize(exercise?.bodyPart) }} |
             {{ _.capitalize(exercise?.equipment) }}
+          </div>
+
+          <div v-if="exercise">
+            <Progression :exercise="exercise" />
           </div>
         </div>
       </div>
     </div>
 
+    <q-btn
+      class="full-width q-mt-sm"
+      label="Workout"
+      color="blue-9"
+      :to="`/workouts/${exercise?._id}/new`"
+    />
+
     <!-- Calendar -->
-    <div class="q-mt-md">
+    <div class="q-mt-sm">
       <Calendar
         transparent
         ref="calendar"
@@ -76,14 +82,13 @@
 <script setup>
 import "v-calendar/style.css";
 import { Calendar } from "v-calendar";
+import { WorkoutRecord, Progression } from "src/components";
 
 import _ from "lodash";
 import moment from "moment";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import { ref, onMounted, computed } from "vue";
-
-import { WorkoutRecord } from "src/components";
 
 import { loadUsersExercise } from "src/utils";
 import { useAuthStore } from "stores/auth-store";

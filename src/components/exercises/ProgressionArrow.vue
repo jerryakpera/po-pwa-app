@@ -1,9 +1,9 @@
 <template>
   <div
     class="flex items-center justify-center"
-    :style="`font-size: 1.3em; background: rgba(${hexToRgb(
+    :style="`font-size: 1.1em; background: rgba(${hexToRgb(
       bgColor(percentDifferenceWithLastPO)
-    )}, 1); color: white; width: 30px; height: 30px; border-radius: 100%;`"
+    )}, 1); color: white; width: 26px; height: 26px; border-radius: 100%;`"
   >
     <POIcon
       icon="ph:arrow-fat-up-fill"

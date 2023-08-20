@@ -1,22 +1,6 @@
 <template>
   <div>
-    <div>
-      <q-chip square dense>
-        <q-avatar
-          text-color="white"
-          :style="`background: rgba(${hexToRgb(
-            bgColor(percentageDifferenceWithMinPO)
-          )}, 1)`"
-        >
-          <POIcon
-            icon="ph:arrow-fat-up-fill"
-            :style="`rotate: ${getRotation(percentageDifferenceWithMinPO)}deg;`"
-            style="transform-origin: center"
-          />
-        </q-avatar>
-        Last / Min
-      </q-chip>
-
+    <!-- <div>
       <q-chip square dense>
         <q-avatar
           text-color="white"
@@ -30,7 +14,7 @@
             style="transform-origin: center"
           />
         </q-avatar>
-        Last / Max
+        vs best
       </q-chip>
 
       <q-chip square dense>
@@ -48,15 +32,15 @@
             style="transform-origin: center"
           />
         </q-avatar>
-        Last / Average
+        vs average
       </q-chip>
-    </div>
+    </div> -->
 
-    <div class="stats q-py-xs q-px-sm">
-      <div v-for="(workout, i) in exercise.workouts" :key="workout._id">
+    <div class="stats q-py-xs" style="overflow-x: hidden !important">
+      <div v-for="(workout, i) in workoutsToDisplay" :key="workout._id">
         <ProgressionArrow
           :progressive_overload="workout.progressive_overload"
-          :lastPO="exercise.workouts[i - 1]?.progressive_overload"
+          :lastPO="workoutsToDisplay[i - 1]?.progressive_overload"
         />
       </div>
     </div>
@@ -70,6 +54,8 @@ import { getPercentageDiff, hexToRgb, getColors } from "src/utils";
 
 // const props = defineProps(["workouts", "totalProgressiveOverload"]);
 const props = defineProps(["exercise"]);
+
+const workoutsToDisplay = computed(() => props.exercise.workouts?.slice(-6));
 
 const percentageDifferenceWithAveragePO = computed(() => {
   const lastWorkout = props.exercise?.sortedWorkouts[0];
