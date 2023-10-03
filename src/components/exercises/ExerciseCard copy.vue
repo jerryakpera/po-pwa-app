@@ -1,10 +1,9 @@
 <template>
-  <q-card
-    flat
-    class="transparent"
-    :style="`border: 1.5px solid ${workoutBorderColor}; border-radius: 5px;`"
-  >
-    <q-card-section class="q-pa-xs">
+  <q-card flat>
+    <q-card-section
+      class="q-pa-none"
+      :style="`background: rgba(${hexToRgb(bgColor)}, 0.3)`"
+    >
       <div class="row items-start">
         <div class="col-3">
           <router-link
@@ -16,7 +15,11 @@
           >
             <q-img
               :src="exercise.demonstration"
-              style="height: 100%; border-radius: 5px"
+              style="
+                height: 100%;
+                border-top-left-radius: 5px;
+                border-bottom-right-radius: 5px;
+              "
             />
           </router-link>
         </div>
@@ -82,14 +85,6 @@ const bgColor = computed(() => {
   }
 
   return "000000";
-});
-
-const workoutBorderColor = computed(() => {
-  if (bgColor.value === "000000") {
-    return "#222";
-  }
-
-  return `#${bgColor.value}`;
 });
 
 const openWorkouts = (id) => {

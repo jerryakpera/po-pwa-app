@@ -11,7 +11,7 @@
     "build": "quasar build -m pwa",
     "icons": "icongenie generate -i AppIcon.png --skip-trim",
     "splashscreen": "icongenie generate -f splashscreen -b SplashScreen.png --splashscreen-icon-ratio 0 --splashscreen-color 000000",
-    "deploy": "firebase deploy"
+    "deploy": "quasar build -m pwa && firebase deploy"
   },
   "dependencies": {
     "@iconify/vue": "^4.1.1",

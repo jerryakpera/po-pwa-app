@@ -13,7 +13,7 @@
     :rows-per-page-options="[10]"
     :pagination="{ rowsPerPage: 10 }"
   >
-    <template v-slot:top>
+    <template v-slot:top class="bg-yellow full-width">
       <q-card flat bordered class="full-width">
         <q-expansion-item
           dense

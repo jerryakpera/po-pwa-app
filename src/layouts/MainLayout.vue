@@ -20,9 +20,10 @@
         </q-btn>
       </q-toolbar>
 
-      <q-tabs align="left" dense :breakpoint="0">
+      <q-tabs align="justify" dense :breakpoint="0">
         <q-route-tab to="/" exact exact-active-class="bg-accent text-dark">
           <POIcon icon="material-symbols:home" class="text-h5" />
+          <span class="text-caption text-weight-medium"> My workouts </span>
         </q-route-tab>
         <q-route-tab
           to="/exercises"
@@ -30,14 +31,15 @@
           exact-active-class="bg-accent text-dark"
         >
           <POIcon icon="healthicons:exercise-weights" class="text-h5" />
+          <span class="text-caption text-weight-medium"> All Exercises </span>
         </q-route-tab>
       </q-tabs>
     </q-header>
 
-    <q-page-container>
+    <q-page-container class="bg-black">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
-          <q-page class="q-pa-md">
+          <q-page class="q-px-md">
             <component :is="Component" />
           </q-page>
         </transition>
